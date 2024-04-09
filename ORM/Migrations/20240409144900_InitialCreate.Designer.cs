@@ -11,7 +11,7 @@ using ORM.src.Context;
 namespace ORM.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20240408204056_InitialCreate")]
+    [Migration("20240409144900_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -82,6 +82,36 @@ namespace ORM.Migrations
                     b.ToTable("Enderecos");
                 });
 
+            modelBuilder.Entity("ORM.src.Model.MenuAcesso", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("codigo")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("endereco")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("nome")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("MenuAcesso");
+                });
+
             modelBuilder.Entity("ORM.src.Model.Pais", b =>
                 {
                     b.Property<int>("Id")
@@ -101,6 +131,23 @@ namespace ORM.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Paiss");
+                });
+
+            modelBuilder.Entity("ORM.src.Model.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Role");
                 });
 
             modelBuilder.Entity("ORM.src.Model.Uf", b =>
@@ -142,12 +189,21 @@ namespace ORM.Migrations
                     b.Property<string>("Nome")
                         .HasColumnType("text");
 
+                    b.Property<int>("RoleId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("email")
+                        .HasColumnType("text");
+
+                    b.Property<string>("password")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.HasIndex("EnderecoId");
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("Usuarios");
                 });
@@ -182,6 +238,17 @@ namespace ORM.Migrations
                     b.Navigation("Cidade");
                 });
 
+            modelBuilder.Entity("ORM.src.Model.MenuAcesso", b =>
+                {
+                    b.HasOne("ORM.src.Model.Role", "Role")
+                        .WithMany("MenuAcessos")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+                });
+
             modelBuilder.Entity("ORM.src.Model.Usuario", b =>
                 {
                     b.HasOne("ORM.src.Model.Endereco", "Endereco")
@@ -190,7 +257,20 @@ namespace ORM.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ORM.src.Model.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Endereco");
+
+                    b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("ORM.src.Model.Role", b =>
+                {
+                    b.Navigation("MenuAcessos");
                 });
 #pragma warning restore 612, 618
         }
