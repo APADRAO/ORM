@@ -10,9 +10,9 @@ namespace ORM.src.Model
     public class Usuario
     {
         public int Id { get; set; }
-        public string? Nome { get; set; }
+        public required string Nome { get; set; }
         public required string password { get; set; }
-        public string? email { get; set; }
+        public required string email { get; set; }
         
         [ForeignKey("Endereco")]
         public int EnderecoId { get; set; }
