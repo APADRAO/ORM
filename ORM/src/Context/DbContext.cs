@@ -27,5 +27,7 @@ namespace ORM.src.Context
         public DbSet<Endereco> Enderecos { get; set; }
         public DbSet<Pais> Paiss { get; set; }
         public DbSet<Uf> Ufs { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<MenuAcesso> MenuAcessos { get; set; }
     }
 }
